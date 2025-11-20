@@ -1,26 +1,23 @@
 import { StyleSheet, View } from "react-native";
-import Balance from "../components/balance";
 import { DUMMY_EXPENSES } from "../components/expenses/dummy-data";
 import Expenses from "../components/expenses/expenses";
 import Header from "../components/header";
 
-function Index({}) {
+function History() {
   return (
     <View style={styles.wrapper}>
-      <Header title={"Home"} />
-
-      <Balance />
+      <Header title={"History"} />
 
       <Expenses
-        expensesTitle={"Recent Eggspences"}
-        expensesPeriod={"Last 7 Days"}
+        expensesTitle={"All Eggspences"}
+        expensesPeriod={"Since 11/11/2025"}
         expenses={DUMMY_EXPENSES}
       />
     </View>
   );
 }
 
-export default Index;
+export default History;
 
 const styles = StyleSheet.create({
   wrapper: {
