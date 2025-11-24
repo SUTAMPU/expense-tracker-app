@@ -29,11 +29,15 @@ function List({ expenses }: ListProps) {
       ListFooterComponent={
         <>
           <View style={styles.footer}>
-            <Text>Total</Text>
-            <Text>${expensesSum.toFixed(2)}</Text>
+            <Text style={[styles.text, { textTransform: "uppercase" }]}>
+              Total
+            </Text>
+            <Text style={styles.text}>${expensesSum.toFixed(2)}</Text>
           </View>
           <View style={{ alignItems: "center" }}>
-            <Text>Have a nice day, User!</Text>
+            <Text style={[styles.text, { fontSize: 12 }]}>
+              Have a nice day, User!
+            </Text>
           </View>
         </>
       }
@@ -47,6 +51,7 @@ const styles = StyleSheet.create({
   header: {
     borderBottomWidth: 1,
     borderStyle: "dashed",
+    marginBottom: 5,
   },
   footer: {
     borderTopWidth: 1,
@@ -55,5 +60,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginTop: 5,
+  },
+  text: {
+    fontFamily: "GlacialIndifference-Regular",
+    color: "black",
+    fontSize: 15,
+    letterSpacing: 1.5,
+    margin: 10,
   },
 });

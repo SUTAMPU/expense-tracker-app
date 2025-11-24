@@ -1,10 +1,15 @@
+import { ExpensesContext } from "@/store/expense-context";
+import { useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import Balance from "../components/balance";
-import { DUMMY_EXPENSES } from "../components/expenses/dummy-data";
 import Expenses from "../components/expenses/expenses";
 import Header from "../components/header";
 
 function Index({}) {
+  const expensesCtx = useContext(ExpensesContext);
+
+  const recentExpenses = expensesCtx.expenses.filter((expense) => {});
+
   return (
     <View style={styles.wrapper}>
       <Header title={"Home"} />
@@ -14,7 +19,7 @@ function Index({}) {
       <Expenses
         expensesTitle={"Recent Eggspences"}
         expensesPeriod={"Last 7 Days"}
-        expenses={DUMMY_EXPENSES}
+        expenses={expensesCtx.expenses}
       />
     </View>
   );

@@ -17,15 +17,17 @@ function Overlay({ visible, onClose }: OverlayProps) {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={[styles.main, { fontSize: 20 }]}>Title</Text>
+          <Text style={[styles.main, { fontSize: 20 }]}>Remove Item</Text>
           <View>
-            <Text>Content</Text>
+            <Text style={styles.text}>
+              Are you sure you want to remove your book expense?
+            </Text>
           </View>
           <Button mode="default" onPress={onClose}>
-            Done
+            Yes
           </Button>
           <Button mode="flat" onPress={onClose}>
-            Cancel
+            Not sure
           </Button>
         </View>
       </View>
@@ -56,6 +58,13 @@ const styles = StyleSheet.create({
   heading: {
     fontFamily: "LeagueSpartan-Regular",
     fontSize: 16,
+  },
+  text: {
+    fontFamily: "GlacialIndifference-Regular",
+    fontSize: 12,
+    margin: 25,
+    width: 160,
+    textAlign: "center",
   },
   input: {
     padding: 15,

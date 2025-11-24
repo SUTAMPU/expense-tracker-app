@@ -1,9 +1,12 @@
+import { ExpensesContext } from "@/store/expense-context";
+import { useContext } from "react";
 import { StyleSheet, View } from "react-native";
-import { DUMMY_EXPENSES } from "../components/expenses/dummy-data";
 import Expenses from "../components/expenses/expenses";
 import Header from "../components/header";
 
 function History() {
+  const expensesCtx = useContext(ExpensesContext);
+
   return (
     <View style={styles.wrapper}>
       <Header title={"History"} />
@@ -11,7 +14,7 @@ function History() {
       <Expenses
         expensesTitle={"All Eggspences"}
         expensesPeriod={"Since 11/11/2025"}
-        expenses={DUMMY_EXPENSES}
+        expenses={expensesCtx.expenses}
       />
     </View>
   );

@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     padding: 8,
     paddingHorizontal: 75,
     backgroundColor: GlobalStyles.colours.primary,
+    margin: 5,
   },
   flat: {
     backgroundColor: "transparent",

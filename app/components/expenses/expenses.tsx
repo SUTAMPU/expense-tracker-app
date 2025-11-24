@@ -1,21 +1,20 @@
 import { StyleSheet, Text, View } from "react-native";
 import List from "./list";
 
-import { DUMMY_EXPENSES } from "./dummy-data";
 import { ExpensesProps } from "./expenses-props";
 
-function Expenses({ expensesTitle, expensesPeriod }: ExpensesProps) {
+function Expenses({ expenses, expensesTitle, expensesPeriod }: ExpensesProps) {
   return (
     <View style={styles.wrapper}>
       {/* Header */}
       <View style={styles.header}>
-        <Text>{expensesTitle}</Text>
-        <Text>{expensesPeriod}</Text>
+        <Text style={styles.title}>{expensesTitle}</Text>
+        <Text style={styles.heading}>{expensesPeriod}</Text>
       </View>
 
       {/* List of expenses */}
       <View style={styles.main}>
-        <List expenses={DUMMY_EXPENSES} />
+        <List expenses={expenses} />
       </View>
     </View>
   );
@@ -43,5 +42,18 @@ const styles = StyleSheet.create({
   main: {
     width: "100%",
     height: "100%",
+  },
+  title: {
+    fontFamily: "LeagueSpartan-Bold",
+    color: "black",
+    fontSize: 20,
+    marginBottom: 10,
+  },
+  heading: {
+    fontFamily: "GlacialIndifference-Regular",
+    color: "black",
+    fontSize: 12,
+    letterSpacing: 1.5,
+    marginBottom: 10,
   },
 });

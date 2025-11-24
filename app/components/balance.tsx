@@ -1,17 +1,37 @@
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+const editIcon = require("../../assets/images/edit-icon.png");
 
-function handleCurrency() {}
+interface CurrencyProps {
+  currency: "euro" | "dollar" | "pound" | "baht";
+}
 
 function Balance() {
+  const [currency, setCurrency] = useState<CurrencyProps>({ currency: "euro" });
+
+  const currencySymbols = {
+    euro: "€",
+    dollar: "$",
+    pound: "£",
+    baht: "฿",
+  };
   return (
     <View style={styles.wrapper}>
-      <Text>Total Blanace</Text>
-      <Text>€450.00</Text>
-      <TouchableOpacity onPress={() => Alert.alert("Currency button pressed!")}>
-        <View>
-          <Text style={[styles.font, styles.button]}>Euro</Text>
-        </View>
-      </TouchableOpacity>
+      <Text style={[styles.font, styles.text]}>Total Balance</Text>
+      <Text style={styles.number}>
+        {currencySymbols[currency.currency]}450.00
+      </Text>
+
+      <Picker
+        selectedValue={currency}
+        onValueChange={(item, _) => setCurrency(item)}
+      >
+        <Picker.Item label="EURO" value="euro" />
+        <Picker.Item label="DOLLAR" value="dollar" />
+        <Picker.Item label="POUND" value="pound" />
+        <Picker.Item label="BAHT" value="baht" />
+      </Picker>
     </View>
   );
 }
@@ -35,5 +55,15 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderColor: "black",
     borderWidth: 1,
+  },
+  text: {
+    fontSize: 12,
+    letterSpacing: 1.5,
+    margin: 10,
+  },
+  number: {
+    fontFamily: "LeagueSpartan-Bold",
+    color: "black",
+    fontSize: 64,
   },
 });
