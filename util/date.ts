@@ -6,3 +6,7 @@ export function getFormattedDate(date: Date) {
     year: "numeric",
   });
 }
+
+export function getDateMinusDays(date: Date, days: number) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() - days);
+}

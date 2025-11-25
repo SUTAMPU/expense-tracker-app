@@ -1,11 +1,12 @@
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useState } from "react";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [user, setUser] = useState<boolean | null>(null);
   const [loaded, error] = useFonts({
     "LeagueSpartan-Regular": require("../assets/fonts/LeagueSpartan-Regular.ttf"),
     "LeagueSpartan-Bold": require("../assets/fonts/LeagueSpartan-Bold.ttf"),
@@ -13,19 +14,20 @@ export default function RootLayout() {
     "GlacialIndifference-Bold": require("../assets/fonts/GlacialIndifference-Bold.otf"),
   });
 
-  useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded, error]);
+  // Check fonts
+  if (!loaded) return null;
 
-  if (!loaded && !error) {
+  // Check user
+  if (user === null) {
+    setTimeout(() => setUser(false), 500);
     return null;
   }
 
+  SplashScreen.hideAsync();
+
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    <Stack screenOptions={{ headerShown: false }}>
+      {user ? <Stack.Screen name="(tabs)" /> : <Stack.Screen name="(auth)" />}
     </Stack>
   );
 }

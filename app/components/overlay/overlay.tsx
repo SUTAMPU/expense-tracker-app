@@ -1,78 +1,83 @@
-import { GlobalStyles } from "@/app/constants/global-styles";
-import { Modal, StyleSheet, Text, View } from "react-native";
-import Button from "../ui/button";
+import { ExpensesContext } from "@/store/expense-context";
+import { useContext } from "react";
+import { Alert, Modal } from "react-native";
+import Content from "./content";
 
 interface OverlayProps {
+  id?: string;
+  mode: "add" | "remove";
   visible: boolean;
   onClose: () => void;
 }
 
-function Overlay({ visible, onClose }: OverlayProps) {
+function Overlay({ mode, id, visible, onClose }: OverlayProps) {
+  const expenseCtx = useContext(ExpensesContext);
+
+  function handleRemove() {
+    expenseCtx.removeExpense(id!);
+    onClose();
+  }
+
+  function handleAdd(data?: {
+    date: string;
+    description: string;
+    price: string;
+  }) {
+    if (!data) return;
+
+    // Check input
+    const dateIsValid = data.date.toString() !== "Invalid Date";
+    const descriptionIsValid = data.description.trim().length > 0;
+    const priceInput = parseFloat(data.price);
+    const priceIsValid = !isNaN(priceInput) && priceInput > 0;
+
+    if (!dateIsValid || !descriptionIsValid || !priceIsValid) {
+      Alert.alert("Invalid input", "Please check your input values");
+      return;
+    }
+    expenseCtx.addExpense({
+      description: data.description,
+      amount: parseFloat(data.price),
+      date: new Date(data.date),
+    });
+
+    onClose();
+  }
+
+  const content =
+    mode === "remove"
+      ? {
+          mode: "remove",
+          title: "Remove Item",
+          confirm: "Yes",
+          cancel: "Not sure",
+          onConfirm: handleRemove,
+        }
+      : {
+          mode: "add",
+          title: "Add Item",
+          confirm: "Done",
+          cancel: "Cancel",
+          onConfirm: handleAdd,
+        };
+
   return (
     <Modal
       animationType="fade"
-      transparent={true}
+      transparent
       visible={visible}
       onRequestClose={onClose}
     >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={[styles.main, { fontSize: 20 }]}>Remove Item</Text>
-          <View>
-            <Text style={styles.text}>
-              Are you sure you want to remove your book expense?
-            </Text>
-          </View>
-          <Button mode="default" onPress={onClose}>
-            Yes
-          </Button>
-          <Button mode="flat" onPress={onClose}>
-            Not sure
-          </Button>
-        </View>
-      </View>
+      <Content
+        mode={content.mode}
+        title={content.title}
+        confirm={content.confirm}
+        cancel={content.cancel}
+        onConfirm={content.onConfirm}
+        onClose={onClose}
+      />
     </Modal>
   );
 }
 
 export default Overlay;
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-  },
-  main: {
-    fontFamily: "LeagueSpartan-Bold",
-    color: "black",
-  },
-  heading: {
-    fontFamily: "LeagueSpartan-Regular",
-    fontSize: 16,
-  },
-  text: {
-    fontFamily: "GlacialIndifference-Regular",
-    fontSize: 12,
-    margin: 25,
-    width: 160,
-    textAlign: "center",
-  },
-  input: {
-    padding: 15,
-    borderRadius: 12,
-    width: 220,
-    height: 40,
-    backgroundColor: GlobalStyles.colours.light,
-    fontFamily: "GlacialIndifference-Regular",
-    fontSize: 16,
-  },
-});

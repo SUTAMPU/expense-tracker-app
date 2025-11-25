@@ -1,4 +1,5 @@
 import { ExpensesContext } from "@/store/expense-context";
+import { getDateMinusDays } from "@/util/date";
 import { useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import Balance from "../components/balance";
@@ -8,7 +9,12 @@ import Header from "../components/header";
 function Index({}) {
   const expensesCtx = useContext(ExpensesContext);
 
-  const recentExpenses = expensesCtx.expenses.filter((expense) => {});
+  const recentExpenses = expensesCtx.expenses.filter((expense) => {
+    const today = new Date();
+    const date7DaysAgo = getDateMinusDays(today, 7);
+
+    return expense.date >= date7DaysAgo && expense.date <= today;
+  });
 
   return (
     <View style={styles.wrapper}>
@@ -19,7 +25,7 @@ function Index({}) {
       <Expenses
         expensesTitle={"Recent Eggspences"}
         expensesPeriod={"Last 7 Days"}
-        expenses={expensesCtx.expenses}
+        expenses={recentExpenses}
       />
     </View>
   );

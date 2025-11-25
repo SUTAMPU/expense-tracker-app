@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import {
   Alert,
   Image,
@@ -16,7 +17,7 @@ interface HeaderProps {
 function Header({ title }: HeaderProps) {
   return (
     <View style={styles.wrapper}>
-      <TouchableOpacity onPress={() => Alert.alert("Logout button pressed!")}>
+      <TouchableOpacity onPress={() => router.push("/login")}>
         <View>
           <Image
             source={logoutIcon}

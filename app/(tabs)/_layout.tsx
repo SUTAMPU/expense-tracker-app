@@ -17,6 +17,7 @@ export default function TabLayout() {
       <ContextProvider>
         <Tabs
           screenOptions={{
+            headerShown: false,
             tabBarShowLabel: false,
             tabBarStyle: {
               // Move inwards
@@ -150,6 +151,7 @@ export default function TabLayout() {
 
         {modalVisible && (
           <Overlay
+            mode="add"
             visible={modalVisible}
             onClose={() => setModalVisible(false)}
           />

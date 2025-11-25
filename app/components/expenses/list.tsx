@@ -26,6 +26,11 @@ function List({ expenses }: ListProps) {
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
       ListHeaderComponent={<View style={styles.header}></View>}
+      ListEmptyComponent={
+        <Text style={[styles.text, { fontSize: 12, margin: 100 }]}>
+          You do not have any eggspences.
+        </Text>
+      }
       ListFooterComponent={
         <>
           <View style={styles.footer}>
@@ -68,5 +73,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     letterSpacing: 1.5,
     margin: 10,
+    textAlign: "center",
   },
 });
