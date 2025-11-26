@@ -1,15 +1,24 @@
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 import { Image, ImageBackground, TouchableOpacity, View } from "react-native";
 
+import { AuthContext } from "@/store/auth-context";
 import ContextProvider from "@/store/expense-context";
 import { Octicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Overlay from "../components/overlay/overlay";
 import { GlobalStyles } from "../constants/global-styles";
 const addIcon = require("../../assets/images/add-icon.png");
 const eggIcon = require("../../assets/images/egg-icon.png");
 
 export default function TabLayout() {
+  const authCtx = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!authCtx.isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [authCtx.isAuthenticated]);
+
   const [modalVisible, setModalVisible] = useState(false);
 
   return (

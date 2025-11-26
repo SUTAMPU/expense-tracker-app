@@ -1,33 +1,46 @@
+import { AuthContext } from "@/store/auth-context";
+import { createUser } from "@/util/auth";
 import { router } from "expo-router";
-import { StyleSheet, Text, TextInput, View } from "react-native";
-import Button from "../components/ui/button";
+import { useContext } from "react";
+import { Alert, StyleSheet, Text, View } from "react-native";
+import AuthForm from "../components/auth/form";
 import { GlobalStyles } from "../constants/global-styles";
 
+interface SignupProps {
+  email: string;
+  password: string;
+}
+
 function Signup() {
+  const authCtx = useContext(AuthContext);
+
+  async function handleSignup({ email, password }: SignupProps) {
+    try {
+      const token = await createUser(email, password);
+      authCtx.authenticate(token);
+      router.replace("/");
+    } catch (error) {
+      Alert.alert(
+        "Error!",
+        "Your password must be at least 6 characters long."
+      );
+    }
+  }
+
   return (
     <View style={styles.centeredView}>
       <View style={styles.wrapper}>
         <Text style={styles.title}>Create your Account</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor={GlobalStyles.colours.gray}
+        <AuthForm
+          isLogin={false}
+          onSubmit={handleSignup}
+          credentialsInvalid={{
+            email: false,
+            password: false,
+            confirmPassword: false,
+          }}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor={GlobalStyles.colours.gray}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Confirm password"
-          placeholderTextColor={GlobalStyles.colours.gray}
-        />
-
-        <Button style={{ marginTop: 20 }} mode="default" onPress={() => {}}>
-          Sign up
-        </Button>
 
         <Text style={styles.link}>
           Already have an account?{" "}
@@ -58,16 +71,6 @@ const styles = StyleSheet.create({
     fontSize: 36,
     marginBottom: 50,
     alignSelf: "flex-start",
-  },
-  input: {
-    padding: 15,
-    borderRadius: 12,
-    width: 300,
-    height: 50,
-    backgroundColor: GlobalStyles.colours.light,
-    fontFamily: "GlacialIndifference-Regular",
-    fontSize: 16,
-    marginBottom: 10,
   },
   link: {
     fontFamily: "LeagueSpartan-Regular",

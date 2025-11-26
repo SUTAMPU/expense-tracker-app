@@ -1,32 +1,46 @@
+import { AuthContext } from "@/store/auth-context";
+import { loginUser } from "@/util/auth";
 import { router } from "expo-router";
-import { StyleSheet, Text, TextInput, View } from "react-native";
-import Button from "../components/ui/button";
+import { useContext } from "react";
+import { Alert, StyleSheet, Text, View } from "react-native";
+import AuthForm from "../components/auth/form";
 import { GlobalStyles } from "../constants/global-styles";
 
+interface LoginProps {
+  email: string;
+  password: string;
+}
+
 function Login() {
+  const authCtx = useContext(AuthContext);
+
+  async function handleLogin({ email, password }: LoginProps) {
+    try {
+      const token = await loginUser(email, password);
+      authCtx.authenticate(token);
+      router.replace("/");
+    } catch (error) {
+      Alert.alert(
+        "Authentication failed!",
+        "Please check your credentials or try again later!"
+      );
+    }
+  }
+
   return (
     <View style={styles.centeredView}>
       <View style={styles.wrapper}>
         <Text style={styles.title}>Login to your Account</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor={GlobalStyles.colours.gray}
+        <AuthForm
+          isLogin={true}
+          onSubmit={handleLogin}
+          credentialsInvalid={{
+            email: false,
+            password: false,
+            confirmPassword: false,
+          }}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor={GlobalStyles.colours.gray}
-        />
-
-        <Button
-          style={{ marginTop: 20 }}
-          mode="default"
-          onPress={() => router.push("/")}
-        >
-          Sign in
-        </Button>
 
         <Text style={styles.link}>
           Don't have an account?{" "}
@@ -57,16 +71,6 @@ const styles = StyleSheet.create({
     fontSize: 36,
     marginBottom: 50,
     alignSelf: "flex-start",
-  },
-  input: {
-    padding: 15,
-    borderRadius: 12,
-    width: 300,
-    height: 50,
-    backgroundColor: GlobalStyles.colours.light,
-    fontFamily: "GlacialIndifference-Regular",
-    fontSize: 16,
-    marginBottom: 10,
   },
   link: {
     fontFamily: "LeagueSpartan-Regular",
