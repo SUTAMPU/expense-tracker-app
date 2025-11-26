@@ -1,4 +1,5 @@
-import { router } from "expo-router";
+import { AuthContext } from "@/store/auth-context";
+import { useContext } from "react";
 import {
   Alert,
   Image,
@@ -15,9 +16,11 @@ interface HeaderProps {
 }
 
 function Header({ title }: HeaderProps) {
+  const authCtx = useContext(AuthContext);
+
   return (
     <View style={styles.wrapper}>
-      <TouchableOpacity onPress={() => router.push("/login")}>
+      <TouchableOpacity onPress={authCtx.logout}>
         <View>
           <Image
             source={logoutIcon}

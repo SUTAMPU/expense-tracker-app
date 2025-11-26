@@ -37,7 +37,7 @@ function Overlay({ mode, id, visible, onClose }: OverlayProps) {
     }
     expenseCtx.addExpense({
       description: data.description,
-      amount: parseFloat(data.price),
+      price: parseFloat(data.price),
       date: new Date(data.date),
     });
 

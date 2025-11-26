@@ -59,7 +59,7 @@ export default function TabLayout() {
                     position: "absolute",
                     justifyContent: "center",
                     alignItems: "center",
-                    top: focused ? 15 : 25,
+                    top: focused ? 0 : 10,
                   }}
                 >
                   <Octicons
@@ -132,7 +132,7 @@ export default function TabLayout() {
                     position: "absolute",
                     justifyContent: "center",
                     alignItems: "center",
-                    top: focused ? 15 : 25,
+                    top: focused ? 0 : 10,
                   }}
                 >
                   <Octicons

@@ -5,7 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Overlay from "../overlay/overlay";
 import { Expense } from "./expenses-props";
 
-function ExpenseItem({ id, description, date, amount }: Expense) {
+function ExpenseItem({ id, description, date, price }: Expense) {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -19,7 +19,7 @@ function ExpenseItem({ id, description, date, amount }: Expense) {
         </View>
 
         <View style={styles.right}>
-          <Text style={[styles.font, styles.main]}>{amount.toFixed(2)}</Text>
+          <Text style={[styles.font, styles.main]}>{price.toFixed(2)}</Text>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <View>
               <Text style={[styles.font, styles.button]}>Remove</Text>

@@ -16,7 +16,7 @@ function renderItem(itemData: any) {
 
 function List({ expenses }: ListProps) {
   const expensesSum = expenses.reduce(
-    (sum: number, expense: { amount: any }) => sum + expense.amount,
+    (sum: number, expense: { price: any }) => sum + expense.price,
     0
   );
 
@@ -27,7 +27,7 @@ function List({ expenses }: ListProps) {
       keyExtractor={(item) => item.id}
       ListHeaderComponent={<View style={styles.header}></View>}
       ListEmptyComponent={
-        <Text style={[styles.text, { fontSize: 12, margin: 100 }]}>
+        <Text style={[styles.text, { fontSize: 12, margin: 50 }]}>
           You do not have any eggspences.
         </Text>
       }

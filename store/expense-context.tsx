@@ -1,9 +1,17 @@
-import { createContext, ReactNode, useReducer } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
+import { AuthContext } from "./auth-context";
 
 type Expense = {
   id: string;
   description: string;
-  amount: number;
+  price: number;
   date: Date;
 };
 
@@ -12,33 +20,6 @@ type ExpenseContextType = {
   addExpense: (data: Omit<Expense, "id">) => void;
   removeExpense: (id: string) => void;
 };
-
-export const DUMMY_EXPENSES = [
-  {
-    id: "e1",
-    description: "book",
-    amount: 4.95,
-    date: new Date("2025-11-17"),
-  },
-  {
-    id: "e2",
-    description: "sandwich",
-    amount: 10.99,
-    date: new Date("2025-11-17"),
-  },
-  {
-    id: "e3",
-    description: "milk",
-    amount: 2.5,
-    date: new Date("2025-11-18"),
-  },
-  {
-    id: "e4",
-    description: "paper",
-    amount: 0.99,
-    date: new Date("2025-11-20"),
-  },
-];
 
 export const ExpensesContext = createContext<ExpenseContextType>({
   expenses: [],
@@ -49,12 +30,15 @@ export const ExpensesContext = createContext<ExpenseContextType>({
 function expensesReducer(
   state: Expense[],
   action:
+    | { type: "SET"; payload: Expense[] }
     | { type: "ADD"; payload: Omit<Expense, "id"> }
     | { type: "REMOVE"; payload: string }
 ): Expense[] {
   switch (action.type) {
+    case "SET":
+      return action.payload;
     case "ADD":
-      const id = new Date().toString() + Math.random().toString();
+      const id = new Date().toISOString() + Math.random().toString();
       return [{ ...action.payload, id: id }, ...state];
     case "REMOVE":
       return state.filter((expense) => expense.id !== action.payload);
@@ -64,18 +48,47 @@ function expensesReducer(
 }
 
 function ContextProvider({ children }: { children: ReactNode }) {
-  const [expensesState, dispatch] = useReducer(expensesReducer, DUMMY_EXPENSES);
+  const authCtx = useContext(AuthContext);
+  const [expensesState, dispatch] = useReducer(expensesReducer, []);
 
-  function addExpense(expenseData: {
-    description: string;
-    amount: number;
-    date: Date;
-  }) {
-    dispatch({ type: "ADD", payload: expenseData });
+  useEffect(() => {
+    async function loadExpenses() {
+      if (!authCtx.token) return;
+
+      const key = `expenses_${authCtx.token}`;
+      const stored = await AsyncStorage.getItem(key);
+      if (stored) {
+        const parsed = JSON.parse(stored).map((e: any) => ({
+          ...e,
+          date: new Date(e.date),
+        }));
+        dispatch({ type: "SET", payload: parsed });
+      } else {
+        dispatch({ type: "SET", payload: [] });
+      }
+    }
+    loadExpenses();
+  }, [authCtx.token]);
+
+  // Update expenses
+  useEffect(() => {
+    if (!authCtx.token) return;
+    const key = `expenses_${authCtx.token}`;
+    AsyncStorage.setItem(key, JSON.stringify(expensesState));
+  }, [expensesState, authCtx.token]);
+
+  // Add expense
+  function addExpense(expenseData: Omit<Expense, "id">) {
+    const newExpense: Expense = {
+      ...expenseData,
+      id: new Date().toISOString() + Math.random().toString(),
+    };
+    dispatch({ type: "ADD", payload: newExpense });
   }
 
-  function removeExpense(id: string) {
-    dispatch({ type: "REMOVE", payload: id });
+  // Rmove expense
+  function removeExpense(expenseId: string) {
+    dispatch({ type: "REMOVE", payload: expenseId });
   }
 
   const value = {
